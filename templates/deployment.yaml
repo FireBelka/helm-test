@@ -1,0 +1,39 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  labels:
+    app : backend-deployment
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      project: nginx-backend
+  template:
+    metadata:
+      labels:
+        project: nginx-backend
+    spec:
+      containers:
+        - name : nginx-backend-container
+          image: {{ .Values.container.image }}
+          ports:
+            - containerPort: 80
+      imagePullSecrets:
+        - name: docker-credentials
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-backend-svc
+  labels:
+    env  : prod
+spec:
+  selector:
+    project: nginx-backend    # Selecting PODS with those Labels
+  ports:
+    - name      : listener
+      protocol  : TCP
+      port      : 80  # Port on Load Balancer
+      targetPort: 80  # Port on POD
+  type: LoadBalancer
