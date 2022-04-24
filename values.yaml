@@ -2,5 +2,6 @@
 
 container:
   image: testregk8s.azurecr.io/nginx-backend:latest
+  image2: testregk8s.azurecr.io/nginx-proxy-no-ssl:latest
 
 replicaCount: 2
