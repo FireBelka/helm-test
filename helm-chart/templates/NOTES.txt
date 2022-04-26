@@ -1,0 +1,2 @@
+Hello from me!
+For deploy docker secret nedeed!
