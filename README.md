@@ -12,3 +12,21 @@ kubectl apply -f staging_issuer.yaml
 7) https ingress rule:    
 kubectl apply -f ingress-rule-ssl.yaml
 8) kubectl describe certificate
+
+# Prometheus
+## Install
+[url](https://github.com/prometheus-community/helm-charts.git)
+```
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+kubectl create ns monitoring
+helm show values chart/name > prometheus-values.yaml
+```
+edit values (prometheus-values.yaml)
+```
+helm install my-prometheus prometheus-community/kube-prometheus-stack -n monitoring -f prometheus-values.yaml
+```
+defaul grafana pass prom-operator
+## Custom metrics
+1) App in default namespace with metrics on /metrics (demo-custom-metrics folder)
+2) edit values (prometheus-values.yaml; additionalScrapeConfigs section)
+3) helm upgrade my-prometheus prometheus-community/kube-prometheus-stack -n monitoring -f prometheus-values.yaml

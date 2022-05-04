@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: python-monitoring
+
+  name: python-monitoring
+  namespace: default
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      run: prometheus-demo-python
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"      # must be quoted
+        prometheus.io/port: "8080" # must be quoted
+        prometheus.io/path: "/metrics"      # it defaults to /metrics
+      labels:
+        run: prometheus-demo-python
+        app_name: python
+    spec:
+      containers:
+      - image: firebelka/python-monitoring-random-val:latest
+        imagePullPolicy: IfNotPresent
+        name: prometheus-demo-python
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      restartPolicy: Always
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: python-random-val-svc
+  labels:
+    env  : prod
+    release: my-prometheus
+spec:
+  selector:
+    run: prometheus-demo-python    # Selecting PODS with those Labels
+  ports:
+    - port : 8080  # Port on Load Balance
+      targetPort: 8080
+  type: ClusterIP
