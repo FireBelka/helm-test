@@ -15,7 +15,7 @@ kubectl apply -f ingress-rule-ssl.yaml
 
 # Prometheus
 ## Install
-[url](https://github.com/prometheus-community/helm-charts.git)
+[helm chart prometheus-operator](https://github.com/prometheus-community/helm-charts.git)
 ```
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 kubectl create ns monitoring
